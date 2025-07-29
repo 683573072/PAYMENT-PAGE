@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Payment Portal - Secure Payment Processing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7f6; /* Light, subtle background */
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: #2c3e50; /* Dark blue-gray for header text */
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        /* Main Payment Section */
+        .payment-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .payment-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); /* Deep blue-gray gradient */
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .payment-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .payment-header p {
+            opacity: 0.9;
+        }
+
+        /* Invoice Details */
+        .invoice-details {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .invoice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .invoice-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db; /* Accent blue border */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .invoice-item label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .invoice-item .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .invoice-item.total .value {
+            font-size: 2rem;
+            color: #e67e22; /* Warm orange/gold for total amount */
+        }
+
+        /* Payment Form */
+        .payment-form {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db; /* Accent blue on focus */
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+
+        .payment-methods h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .payment-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .payment-option .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .payment-option .name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Transaction ID Section */
+        .transaction-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .transaction-id-group {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .transaction-id-group input {
+            flex: 1;
+        }
+
+        .payment-summary h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+           backdrop-filter: blur(10px);
+        }
+
+        .summary-item label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .summary-item .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .process-payment:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .success-message h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Receipt Section */
+        .receipt-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 40px 0;
+        }
+
+        .receipt-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .receipt-content {
+            padding: 40px;
+        }
+
+        /* Receipt Table */
+        .receipt-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .receipt-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.95rem;
+        }
+
+        .receipt-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .receipt-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Print Modal */
+        .print-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .print-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .print-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .print-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .print-receipt {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .print-receipt h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .print-receipt .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+
+        .print-receipt .receipt-row.total {
+            border-top: 2px solid #333;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 10px;
+        }
+
+        .print-buttons {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #3498db; /* Accent blue on hover */
+        }
+
+        .payment-option:hover {
+            border-color: #3498db; /* Accent blue on hover */
+            background: #eaf4fa; /* Light blue background on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .payment-option.selected {
+            border-color: #3498db; /* Accent blue when selected */
+            background: #3498db; /* Accent blue background when selected */
+            color: white;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); /* Blue gradient for generate button */
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .payment-summary {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); /* Green gradient for payment summary */
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .process-payment {
+            background: #e67e22; /* Warm orange/gold for process payment button */
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .process-payment:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(230, 126, 34, 0.3);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); /* Green gradient for success message */
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .receipt-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); /* Deep blue-gray gradient for receipt header */
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .receipt-table th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); /* Blue gradient for table headers */
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-print {
+            background: #27ae60; /* Green for print button */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print:hover {
+            background: #229a55;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: #e74c3c; /* Red for delete button */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #d62c1a;
+            transform: translateY(-1px);
+        }
+
+        .btn-print-action {
+            background: #3498db; /* Blue for print action button */
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print-action:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .security-badge {
+            text-align: center;
+            padding: 20px;
+            color: #2c3e50; /* Dark blue-gray for security badge text */
+            opacity: 0.8;
+        }
+
+        .security-badge .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .transaction-id-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .receipt-table {
+                font-size: 0.8rem;
+            }
+
+            .receipt-table th,
+            .receipt-table td {
+                padding: 10px 8px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .print-modal-content {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-receipt, .print-receipt * {
+                visibility: visible;
+            }
+            .print-receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .print-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header fade-in">
+            <h1>🏦 Invoice Payment Portal</h1>
+            <p>Secure and efficient payment processing for your invoices</p>
+        </div>
+
+        <!-- Main Payment Section -->
+        <div class="payment-section fade-in">
+            <!-- Payment Header -->
+            <div class="payment-header">
+                <h2>Complete Your Payment</h2>
+                <p>Review your invoice details and process your payment securely</p>
+            </div>
+
+            <!-- Invoice Details -->
+            <div class="invoice-details">
+                <div class="invoice-grid">
+                    <div class="invoice-item">
+                        <label>Invoice Number</label>
+                        <div class="value">INV-2024-001</div>
+                    </div>
+                    <div class="invoice-item">
+                        <label>Due Date</label>
+                        <div class="value">February 15, 2024</div>
+                    </div>
+                    <div class="invoice-item">
+                        <label>Company</label>
+                        <div class="value">Acme Corporation</div>
+                    </div>
+                    <div class="invoice-item">
+                        <label>Description</label>
+                        <div class="value">Web Development Services</div>
+                    </div>
+                    <div class="invoice-item total">
+                        <label>Total Amount</label>
+                        <div class="value">$1,250.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <!-- Payment Methods -->
+                <div class="payment-methods">
+                    <h3>💳 Select Payment Method</h3>
+                    <div class="payment-options">
+                        <div class="payment-option" data-method="credit-card">
+                            <span class="icon">💳</span>
+                            <span class="name">Credit Card</span>
+                        </div>
+                        <div class="payment-option" data-method="debit-card">
+                            <span class="icon">💸</span>
+                            <span class="name">Debit Card</span>
+                        </div>
+                        <div class="payment-option" data-method="bank-transfer">
+                            <span class="icon">🏦</span>
+                            <span class="name">Bank Transfer</span>
+                        </div>
+                        <div class="payment-option" data-method="paypal">
+                            <span class="icon">🅿️</span>
+                            <span class="name">PayPal</span>
+                        </div>
+                        <div class="payment-option" data-method="stripe">
+                            <span class="icon">⚡</span>
+                            <span class="name">Stripe</span>
+                        </div>
+                        <div class="payment-option" data-method="apple-pay">
+                            <span class="icon">🍎</span>
+                            <span class="name">Apple Pay</span>
+                        </div>
+                        <div class="payment-option" data-method="google-pay">
+                            <span class="icon">🤖</span>
+                            <span class="name">Google Pay</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Details Form -->
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label for="payment-date">📅 Payment Date</label>
+                            <input type="date" id="payment-date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount-paid">💰 Amount Paid</label>
+                            <input type="number" id="amount-paid" placeholder="0.00" step="0.01" min="0" max="1250" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Transaction ID Section -->
+                        <div class="transaction-section">
+                            <div class="form-group">
+                                <label for="transaction-id">#️⃣ Transaction ID</label>
+                                <div class="transaction-id-group">
+                                    <input type="text" id="transaction-id" placeholder="Auto-generated or enter manually" readonly>
+                                    <button type="button" class="generate-btn" onclick="generateTransactionId()">
+                                        Generate ID
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Summary -->
+                <div class="payment-summary" id="payment-summary" style="display: none;">
+                    <h3>📋 Payment Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <label>Payment Method</label>
+                            <div class="value" id="summary-method">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <label>Payment Date</label>
+                            <div class="value" id="summary-date">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <label>Amount</label>
+                            <div class="value" id="summary-amount">$0.00</div>
+                        </div>
+                        <div class="summary-item">
+                            <label>Transaction ID</label>
+                            <div class="value" id="summary-transaction">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Payment Button -->
+                <button type="button" class="process-payment" id="process-btn" onclick="processPayment()" disabled>
+                    Process Payment
+                </button>
+
+                <!-- Success Message -->
+                <div class="success-message" id="success-message">
+                    <h3>✅ Payment Successful!</h3>
+                    <p>Your payment has been processed successfully and receipt has been saved below.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receipt Section -->
+        <div class="receipt-section fade-in">
+            <div class="receipt-header">
+                <h2>📋 Payment Receipts</h2>
+                <p>View, print, and manage your payment receipts</p>
+            </div>
+            
+            <div class="receipt-content">
+                <div id="receipts-container">
+                    <!-- Receipts will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Print Modal -->
+        <div class="print-modal" id="print-modal">
+            <div class="print-modal-content">
+                <button class="print-close" onclick="closePrintModal()">&times;</button>
+                <div class="print-receipt" id="print-receipt-content">
+                    <!-- Receipt content will be populated here -->
+                </div>
+                <div class="print-buttons">
+                    <button class="btn-print-action" onclick="printReceipt()">🖨️ Print</button>
+                    <button class="btn-print-action" onclick="closePrintModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Badge -->
+        <div class="security-badge fade-in">
+            <div class="icon">🔒</div>
+            <p>Secured with 256-bit SSL encryption</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedPaymentMethod = '';
+        let receipts = JSON.parse(localStorage.getItem('paymentReceipts')) || [];
+        
+        // Payment method selection
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                selectedPaymentMethod = this.dataset.method;
+                
+                updateSummary();
+                validateForm();
+            });
+        });
+
+        // Form field listeners
+        document.getElementById('payment-date').addEventListener('change', updateSummary);
+        document.getElementById('amount-paid').addEventListener('input', updateSummary);
+        document.getElementById('transaction-id').addEventListener('input', updateSummary);
+
+        // Generate Transaction ID
+        function generateTransactionId() {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substr(2, 6).toUpperCase();
+            const transactionId = `TXN-${timestamp}-${random}`;
+            document.getElementById('transaction-id').value = transactionId;
+            updateSummary();
+            validateForm();
+        }
+
+        // Update payment summary
+        function updateSummary() {
+            const method = selectedPaymentMethod;
+            const date = document.getElementById('payment-date').value;
+            const amount = document.getElementById('amount-paid').value;
+            const transactionId = document.getElementById('transaction-id').value;
+
+            if (method || date || amount || transactionId) {
+                document.getElementById('payment-summary').style.display = 'block';
+                
+                document.getElementById('summary-method').textContent = 
+                    method ? method.replace('-', ' ').toUpperCase() : '-';
+                document.getElementById('summary-date').textContent = date || '-';
+                document.getElementById('summary-amount').textContent = 
+                    amount ? `$${parseFloat(amount).toFixed(2)}` : '$0.00';
+                document.getElementById('summary-transaction').textContent = transactionId || '-';
+            } else {
+                document.getElementById('payment-summary').style.display = 'none';
+            }
+            
+            validateForm();
+        }
+
+        // Validate form
+        function validateForm() {
+            const method = selectedPaymentMethod;
+            const date = document.getElementById('payment-date').value;
+            const amount = document.getElementById('amount-paid').value;
+            const transactionId = document.getElementById('transaction-id').value;
+
+            const isValid = method && date && amount && transactionId && parseFloat(amount) > 0;
+            document.getElementById('process-btn').disabled = !isValid;
+        }
+
+        // Process payment
+        function processPayment() {
+            const button = document.getElementById('process-btn');
+            const originalText = button.textContent;
+            
+            // Show loading state
+            button.innerHTML = '<span class="loading"></span> Processing...';
+            button.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Create receipt object
+                const receipt = {
+                    id: Date.now(),
+                    invoiceNumber: 'INV-2024-001',
+                    company: 'Acme Corporation',
+                    description: 'Web Development Services',
+                    paymentMethod: selectedPaymentMethod.replace('-', ' ').toUpperCase(),
+                    paymentDate: document.getElementById('payment-date').value,
+                    amount: parseFloat(document.getElementById('amount-paid').value),
+                    transactionId: document.getElementById('transaction-id').value,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Add receipt to array and save to localStorage
+                receipts.push(receipt);
+                localStorage.setItem('paymentReceipts', JSON.stringify(receipts));
+                
+                // Show success message
+                document.getElementById('success-message').classList.add('show');
+                
+                // Refresh receipts display
+                displayReceipts();
+                
+                // Reset form
+                resetForm();
+                
+                // Reset button
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // Show alert
+                alert('Payment Successful! Receipt has been saved and added to the table below.');
+                
+                // Scroll to receipts section
+                document.querySelector('.receipt-section').scrollIntoView({ behavior: 'smooth' });
+                
+            }, 3000);
+        }
+
+        // Reset form after successful payment
+        function resetForm() {
+            selectedPaymentMethod = '';
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.getElementById('amount-paid').value = '';
+            document.getElementById('payment-summary').style.display = 'none';
+            generateTransactionId(); // Generate new ID for next payment
+            validateForm();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('success-message').classList.remove('show');
+            }, 5000);
+        }
+
+        // Display receipts in table
+        function displayReceipts() {
+            const container = document.getElementById('receipts-container');
+            
+            if (receipts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📄</div>
+                        <h3>No Receipts Yet</h3>
+                        <p>Your payment receipts will appear here after successful transactions.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHTML = `
+                <div class="receipt-table-container">
+                    <table class="receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Invoice</th>
+                                <th>Company</th>
+                                <th>Payment Method</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${receipts.map(receipt => `
+                                <tr>
+                                    <td><strong>${receipt.transactionId}</strong></td>
+                                    <td>${receipt.invoiceNumber}</td>
+                                    <td>${receipt.company}</td>
+                                    <td>${receipt.paymentMethod}</td>
+                                    <td>${new Date(receipt.paymentDate).toLocaleDateString()}</td>
+                                    <td><strong>$${receipt.amount.toFixed(2)}</strong></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-print" onclick="showPrintModal(${receipt.id})">
+                                                🖨️ Print
+                                            </button>
+                                            <button class="btn-delete" onclick="deleteReceipt(${receipt.id})">
+                                                🗑️ Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Show print modal
+        function showPrintModal(receiptId) {
+            const receipt = receipts.find(r => r.id === receiptId);
+            if (!receipt) return;
+
+            const printContent = `
+                <h3>PAYMENT RECEIPT</h3>
+                <div class="receipt-row">
+                    <span>Transaction ID:</span>
+                    <span>${receipt.transactionId}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Invoice Number:</span>
+                    <span>${receipt.invoiceNumber}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Company:</span>
+                    <span>${receipt.company}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Description:</span>
+                    <span>${receipt.description}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Payment Method:</span>
+                    <span>${receipt.paymentMethod}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Payment Date:</span>
+                    <span>${new Date(receipt.paymentDate).toLocaleDateString()}</span>
+                </div>
+                <div class="receipt-row total">
+                    <span>Total Amount:</span>
+                    <span>$${receipt.amount.toFixed(2)}</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Processed On:</span>
+                    <span>${new Date(receipt.createdAt).toLocaleString()}</span>
+                </div>
+            `;
+
+            document.getElementById('print-receipt-content').innerHTML = printContent;
+            document.getElementById('print-modal').classList.add('show');
+        }
+
+        // Close print modal
+        function closePrintModal() {
+            document.getElementById('print-modal').classList.remove('show');
+        }
+
+        // Print receipt
+        function printReceipt() {
+            window.print();
+        }
+
+        // Delete receipt
+        function deleteReceipt(receiptId) {
+            if (confirm('Are you sure you want to delete this receipt? This action cannot be undone.')) {
+                receipts = receipts.filter(r => r.id !== receiptId);
+                localStorage.setItem('paymentReceipts', JSON.stringify(receipts));
+                displayReceipts();
+                alert('Receipt deleted successfully.');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('print-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePrintModal();
+            }
+        });
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            generateTransactionId();
+            displayReceipts();
+        });
+
+        // Set today's date as default
+        document.getElementById('payment-date').valueAsDate = new Date();
+        updateSummary();
+        
+    </script>
+</body>
+</html>
+
